@@ -1,9 +1,19 @@
 /**
  *	CP411 First Person Pong
- *	Ben Bogusat
+ *	Ben and Eric
  */
 
-#include "MenuControl.hpp"
+#include "glsl/Angel.h"
+#include <GL/glew.h>
+#include <GL/glut.h>
+#include "glaux.h" // for reading bmp files
+
+#include "World.hpp"
+#include "Camera.hpp"
+#include "Light.hpp"
+#include "mesh.hpp"
+
+#include "pixmap/RGBpixmap.h"
 
 void init(void) {
 	myLight.translate(1.5, 1.5, 1.5);
