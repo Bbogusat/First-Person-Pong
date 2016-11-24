@@ -1,10 +1,5 @@
 /*
- *	Name: 
- *	ID: 
- *	Class: CP411
- *	Assignment: 3
- *	Date: 11/2/2013
- *	File: Planet.cpp
+ *	File: Ball.cpp
  */
 
 #include "Ball.hpp"
@@ -15,13 +10,22 @@ Ball::Ball(){
 	radius = 0.5;
 	stacks = 20;
 	splices = 20;
-	r = 0.0;
+	r = 1.0;
 	b = 1.0;
-	g = 0.0;
+	g = 1.0;
 	xSpeed = .05;
 	zSpeed = .1;
 	this->scale_change(-.85);
 	this->translate(0, 1.08, 0);
+
+	quad = gluNewQuadric();
+
+	gluQuadricTexture(quad, GL_TRUE);
+	gluQuadricOrientation(quad, GLU_OUTSIDE);
+	gluQuadricNormals(quad, GLU_SMOOTH);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 }
 
 /*
@@ -49,10 +53,16 @@ void Ball::set_colour(GLfloat red, GLfloat green, GLfloat blue){
  * 	none
  */
 void Ball::draw(){
+	glBindTexture(GL_TEXTURE_2D, textureID);
 	glPushMatrix();
 	this->ctm_multiply();
 	glScalef(s, s, s);
 	glColor3f(r, g, b);
-	glutWireSphere(radius, splices ,stacks); // just the use the glut teapot model
+	gluSphere(quad, radius, splices, stacks);
 	glPopMatrix();
 }
+
+void Ball::setTextureID(int textureid) {
+	textureID = textureid;
+}
+
