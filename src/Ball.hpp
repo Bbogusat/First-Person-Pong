@@ -20,7 +20,7 @@ class Ball: public Shape{
 		GLuint textureID;
 		GLUquadric *quad;
 	public:
-		GLfloat xSpeed, zSpeed, xPosition, yPosition;
+		GLfloat xSpeed, zSpeed, xPosition, zPosition;
 		Ball();
 		void draw();
 		void set_colour(GLfloat, GLfloat, GLfloat);
