@@ -19,14 +19,6 @@ void Table::draw_table() {
 	glTexCoord2f(1., 0.); glVertex3f(-1, 1, 2);
 	glEnd();
 
-	/*glColor3f(0.5, 0.5, 0.5);
-	glBegin(GL_POLYGON);
-	glVertex3f(1, 1, 2);
-	glVertex3f(1, 1, -2);
-	glVertex3f(-1, 1, -2);
-	glVertex3f(-1, 1, 2);
-	glEnd();
-*/
 	//Back table face
 	glColor3f(0.5, 0.3, 0.0);
 	glBegin(GL_POLYGON);
