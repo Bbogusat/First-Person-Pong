@@ -96,24 +96,60 @@ void winReshapeFcn(GLint newWidth, GLint newHeight) {
 }
 
 void mouseAction(int button, int state, int x, int y) {
-
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-		moving = 1;
-		xBegin = x;
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && running == 0) {
+		running = 1;
+		game_loop(1);
 	}
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) {
-		moving = 0;
-	}
-
 	glutPostRedisplay();
 }
 
-void mouseMotion(GLint x, GLint y) {
-	GLfloat rx, ry, rz, theta;
-	theta = (xBegin - x < 0) ? 1 : -1;
-	myCamera.rotate(0.0, 1.0, 0.0, theta * 0.5);
-	glutPostRedisplay();
+void game_loop(int gameState) {
+	//rotate the camera to the opposite side
+	if(pause == 1){
+		myCamera.rotate(0.0, 1.0, 0.0, 2.0);
+		if(turn == 1 && myCamera.eye.z <= -5){
+			pause = 0;
+			turn = 2;
+		}else if (turn == 2 && myCamera.eye.z >= 5){
+			pause = 0;
+			turn = 1;
+		}
+	}
+
+	else{
+		//update ball position
+		myBall.translate(myBall.xSpeed, 0, myBall.zSpeed);
+		myBall.xPosition += myBall.xSpeed;
+		myBall.zPosition += myBall.zSpeed;
+
+		myBall.rotate_mc(1, 0, 0, myBall.zSpeed*-500);
+		myBall.rotate_mc(0, 0, 1, myBall.xSpeed*500);
+
+		//Check bounds for collision
+		if(myBall.xPosition >= 0.95){
+			myBall.xSpeed = -0.01;
+		}
+		if(myBall.xPosition <= -0.95){
+			myBall.xSpeed = 0.01;
+		}
+
+		//Check bounds for endgame
+		if(myBall.zPosition >= 2.0 || myBall.zPosition <= -2){
+			myBall.zSpeed = -myBall.zSpeed;
+			pause = 1;
+			//running = 0;
+		}
+
+		//Check bounds for paddle collision
+
+
+	}
+	if (gameState == 1) {
+    	glutTimerFunc(40, game_loop, 1);  // callback every 40 ms
+    }
+    glutPostRedisplay();
 }
+
 
 void keyDown(unsigned char key, int x, int y) {
 
