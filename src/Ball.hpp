@@ -1,4 +1,10 @@
 /*
+ *	Name: 
+ *	ID: 
+ *	Class: CP411
+ *	Assignment: 3
+ *	Date: 11/2/2013
+ *	File: Planet.hpp
  */
 
 #ifndef CBall_H
