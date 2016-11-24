@@ -9,11 +9,10 @@
 
 class Ball: public Shape{
 	protected:
-		GLfloat radius, r ,g, b; //radius, red, green, blue
+		GLfloat radius, r ,g, b, xSpeed, zSpeed; //radius, red, green, blue, xSpeed, zSpeed
 		GLint splices, stacks;
 	public:
 		Ball();
-		Ball(GLint);
 		void draw();
 		void set_colour(GLfloat, GLfloat, GLfloat);
 
