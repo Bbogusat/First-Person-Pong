@@ -6,30 +6,14 @@
 using namespace std;
 
 Ball::Ball(){
-	radius = 1.0;
+	radius = 0.5;
 	stacks = 20;
 	splices = 20;
 	r = 1.0;
 	b = 1.0;
 	g = 1.0;
-}
-
-/*
- * Ball constructor
- * Parameters:
- * 	the ball to draw if we want more
- */
-Ball::Ball(GLint ball){
-	radius = 1.0;
-	stacks = 20;
-	splices = 20;
-
-	r = 0.0;
-	b = 1.0;
-	g = 0.0;
-	this->scale_change(-.9);
-	this->translate(1.0, 0.0, 1.0);
-
+	xSpeed = .05;
+	zSpeed = .1;
 }
 
 /*
