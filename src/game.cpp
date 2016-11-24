@@ -15,6 +15,18 @@
 
 #include "pixmap/RGBpixmap.h"
 
+RGBpixmap pix[6];   // make six pixmaps
+
+GLint winWidth = 800, winHeight = 800, gameState = 1, moving = 0, xBegin = 0;
+
+//Declare a world containing all objects
+Camera myCamera;
+Light myLight;
+Table myTable;
+Ball myBall;
+
+void game_loop(int); // game animation loop
+
 void init(void) {
 	myLight.translate(1.5, 1.5, 1.5);
 	glClearColor(0.0, 0.0, 0.0, 1.0);
@@ -26,41 +38,17 @@ void init(void) {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glShadeModel(GL_SMOOTH);
 
-	//load and set vertex and fragement shader
-	ProgramObject = InitShader("vertexshader.txt","fragmentshader.txt");
-	glUseProgram(0);
-
-	/* load and and set textures when needed
-	pix[0].makeCheckerboard();
+	// load and and set textures when needed
+	pix[0].readBMPFile("hockey.bmp");
 	pix[0].setTexture(0);
-
-	Ball->setTextureID(0, 0);
-	Ball->setTextureID(1, 1);
-	
-	Table.Leg->textureID = 3;
-	
-	//register objects world, so that transfermations can be applied to the objects
-    myWorld.list[1] = &myBall;
-    myWorld.list[2] = &myTable;
-
-    */
+	myTable.setTextureID(0, 0);
 }
-
 
 void reset(void) {
 	glutIdleFunc(NULL);
-	glUseProgram(0);
-	view = 0;
-	menu = 1;
-	isShading = false;
-	isTexture = false;
-	glDisable(GL_CULL_FACE);
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_NORMALIZE);
-	glDisable(GL_COLOR_MATERIAL);
-	glDisable( GL_LIGHTING );
-	glDisable(GL_LIGHT0);
-	myWorld.reset();
+	gameState = 0;
+	//view = 0;
+	//menu = 1;
 	glFlush();
 	glutPostRedisplay();
 }
@@ -70,49 +58,25 @@ void close(void) {
 }
 
 void display(void) {
-	if (Game.state == 0) {
+
+	//Game has 3 states: 0 - Opening menu. 1 - Game is running. 2 - Game is over show score.
+	if (gameState == 0) {
 		//Display the menu.
-		// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		//Camera.setProjectionMatrix(); //Sets 3D view
 		//menu.draw();
-		/*
-		//draw sample coordinate frames
-		glLineWidth(3);
-		glBegin(GL_LINES);
-		//x-axis
-		glColor3f(0.0, 0.0, 1.0);
-		glVertex3f(2, 0, 0);
-		glVertex3f(0, 0, 0);
-		//y-axis
-		glColor3f(0.0, 1.0, 0.0);
-		glVertex3f(0, 2, 0);
-		glVertex3f(0, 0, 0);
-		//z-axis
-		glColor3f(1.0, 0.0, 0.0);
-		glVertex3f(0, 0, 2);
-		glVertex3f(0, 0, 0);
-		glEnd();
-		glLineWidth(1);
-		*/
-
-		//Game has 3 states: 0 - Opening menu. 1 - Game is running. 2 - Game is over show score.
-		glFlush();
+	}
+	else if (gameState == 1) {
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		myCamera.setProjectionMatrix(); //Sets 3D view
+		// Draw Table
+		myTable.draw_table();
+		myBall.draw();
 	}
 
-	else if (Game.state == 1 and ) {
-		//Display the game based on its states.
-		//world.draw();
-		//light.draw();
-		// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//drawGame();
-		glFlush();
-	}
-
-	else if (Game.state == 2) {
-		//Display the end game state. 
+	else if (gameState == 2) {
+		//Display the end game state.
 		//gameover.draw();
-		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		myCamera.setProjectionMatrix();  // change to 3D view
 	}
 
 	glFlush();
@@ -137,40 +101,33 @@ void mouseAction(int button, int state, int x, int y) {
 		moving = 0;
 	}
 
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && pointClick == 1) {
-		Xpoint = x - winWidth / 2;
-		Ypoint = winHeight / 2 - y;
-		Zpoint = 0;
-
-		printf("Point Clicked: %f %f %f \n", Xpoint, Ypoint, Zpoint);
-
-	}
 	glutPostRedisplay();
 }
 
 void mouseMotion(GLint x, GLint y) {
 	GLfloat rx, ry, rz, theta;
-
+	theta = (xBegin - x < 0) ? 1 : -1;
+	myCamera.rotate(0.0, 1.0, 0.0, theta * 0.5);
 	glutPostRedisplay();
 }
 
-void keyDown(unsigned char key, int x, int y){
+void keyDown(unsigned char key, int x, int y) {
 
 	//forward
-	if (key == 'w'){
-	    position += direction * deltaTime * speed;
+	if (key == 'w') {
+		//position += direction * deltaTime * speed;
 	}
 	// Move backward
-	if (key == 's'){
-	    position -= direction * deltaTime * speed;
+	if (key == 's') {
+		//position -= direction * deltaTime * speed;
 	}
 	// Right
-	if (key == 'd'){
-	    position += right * deltaTime * speed;
+	if (key == 'd') {
+		//position += right * deltaTime * speed;
 	}
 	// Left
-	if (key == 'a'){
-	    position -= right * deltaTime * speed;
+	if (key == 'a') {
+		//position -= right * deltaTime * speed;
 	}
 
 }
@@ -183,7 +140,11 @@ int main(int argc, char** argv) {
 	glutCreateWindow("CP411 First Person Pong");
 	glewInit(); // for using GSLS
 	init();
-	menu();
+
+	glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
+
 	glutDisplayFunc(display);
 	glutMotionFunc(mouseMotion);
 	glutMouseFunc(mouseAction);
