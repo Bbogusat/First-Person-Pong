@@ -1,17 +1,11 @@
 /*
- *	Name: 
- *	ID: 
- *	Class: CP411
- *	Assignment: 3
- *	Date: 11/2/2013
- *	File: Planet.cpp
  */
 
-#include "Planet.hpp"
+#include "Ball.hpp"
 #include <stdio.h>
 using namespace std;
 
-Planet::Planet(){
+Ball::Ball(){
 	radius = 1.0;
 	stacks = 20;
 	splices = 20;
@@ -21,34 +15,26 @@ Planet::Planet(){
 }
 
 /*
- * Planet constructor
+ * Ball constructor
  * Parameters:
- * 	planet: the planet to create 1 for sun and 2 for earth
+ * 	the ball to draw if we want more
  */
-Planet::Planet(GLint planet){
+Ball::Ball(GLint ball){
 	radius = 1.0;
 	stacks = 20;
 	splices = 20;
-	if(planet == 1){
-		//sun
-		r = 1.0;
-		b = 0.0;
-		g = 0.0;
-		this->scale_change(-.7);
-	}else if(planet == 2){
-		//earth
-		r = 0.0;
-		b = 1.0;
-		g = 0.0;
-		this->scale_change(-.9);
-		this->translate(1.0, 0.0, 1.0);
-	}
+
+	r = 0.0;
+	b = 1.0;
+	g = 0.0;
+	this->scale_change(-.9);
+	this->translate(1.0, 0.0, 1.0);
 
 }
 
 /*
  * set_colour
- * a function to set the colour of the planet
+ * a function to set the colour of the ball
  * Parameters:
  * 	red: the amount of red
  * 	green: the amount of green
@@ -56,7 +42,7 @@ Planet::Planet(GLint planet){
  * Returns:
  * 	none
  */
-void Planet::set_colour(GLfloat red, GLfloat green, GLfloat blue){
+void Ball::set_colour(GLfloat red, GLfloat green, GLfloat blue){
 	r = red;
 	g = green;
 	b = blue;
@@ -64,13 +50,13 @@ void Planet::set_colour(GLfloat red, GLfloat green, GLfloat blue){
 
 /*
  * draw
- * the function that draws the planet
+ * the function that draws the ball
  * Parameters:
  * 	none
  * Returns:
  * 	none
  */
-void Planet::draw(){
+void Ball::draw(){
 	glPushMatrix();
 	this->ctm_multiply();
 	glScalef(s, s, s);
