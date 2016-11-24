@@ -42,6 +42,10 @@ void init(void) {
 	pix[0].readBMPFile("hockey.bmp");
 	pix[0].setTexture(0);
 	myTable.setTextureID(0, 0);
+	
+	pix[1].readBMPFile("tennisball.bmp");
+	pix[1].setTexture(1);
+	myBall.setTextureID(1);
 }
 
 void reset(void) {
