@@ -17,11 +17,13 @@ class Ball: public Shape{
 	protected:
 		GLfloat radius, r ,g, b, xSpeed, zSpeed; //radius, red, green, blue, xSpeed, zSpeed
 		GLint splices, stacks;
+		GLuint textureID;
+		GLUquadric *quad;
 	public:
 		Ball();
 		void draw();
 		void set_colour(GLfloat, GLfloat, GLfloat);
-
+		void setTextureID(int textureID);
 };
 #endif
 
