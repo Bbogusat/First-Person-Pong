@@ -4,58 +4,31 @@
 
 #include "World.hpp"
 
-extern bool isSolar;
-
 World::World() {
-	list[0] = new Cube();
-//	list[1] = new Planet(1); //sun
-//	list[2] = new Planet(2);//earth
+	list[0] = new Paddle();
+	list[1] = new Paddle();
+	list[2] = new Ball();
+	list[3] = new Table();
 
 	//Mesh* mymesh = new Mesh();
-	//mymesh->readMesh("barn.3VN");
-	//mymesh->readMesh("BUCK.3VN");
+	//mymesh->readMesh("FILE.3VN"); FOR IF WE GET TO 3VN FILES
 	//list[1] = mymesh;
-
-
-    /* object list
-	ObjectList.push_back(list[0]);
-	ObjectList.push_back(list[1]);
-    */
-
-	/* object vector
-	ObjectVector = new std::vector<Shape*>(2);
-	std::vector<Shape*>& ObjectVecotrRef = *ObjectVector;
-	ObjectVectorRef[0] = list[0];
-	ObjectVectorRef[1] = list[1];
-    */
 }
 
 World::~World(){
-//    delete list[0];
-//    delete list[1];
-//    delete list[2];
+	delete list[0];
+	delete list[1];
+	delete list[2];
+	delete list[3];
 }
 
 void World::draw_world() {
 
-	if (!isSolar) {
-		list[0]->draw();
-	}
-	else {
-		list[1]->draw();
-		list[2]->draw();
-	}
-
-	/*
-	for (std::list<Shape*>::const_iterator it = ObjectList.begin(); it!=ObjectList.end(); ++it) {
-		(*it)->draw();
-	} */
-
-	/*
-	std::vector<Shape*>& ObjectVectorRef = *ObjectVector;
-	for (int i = 0; i < 2; i++ ) {
-		 ObjectVectorRef[i]->draw();
-	} */
+	list[0]->draw();
+	list[1]->draw();
+	list[2]->draw();
+	list[3]->draw();
+	
 
 }
 
@@ -63,5 +36,6 @@ void World::reset(){
     list[0]->reset();
     list[1]->reset();
     list[2]->reset();
+    list[3]->reset();
 }
 

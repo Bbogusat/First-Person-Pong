@@ -1,10 +1,4 @@
 /*
- *	Name: 
- *	ID: 
- *	Class: CP411
- *	Assignment: 3
- *	Date: 10/24/2013
- *	File: House.hpp
  */
 #include "Light.hpp"
 #include "Matrix.hpp"
