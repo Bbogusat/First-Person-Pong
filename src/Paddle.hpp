@@ -18,6 +18,7 @@ protected:
 
 public:
 	Paddle();
+	Paddle(int player);
 	void draw_face(int);
 	void draw();
 	bool isBackface(int);

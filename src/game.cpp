@@ -25,6 +25,8 @@ Camera myCamera;
 Light myLight;
 Table myTable;
 Ball myBall;
+Paddle paddle1;
+Paddle paddle2;
 StartMenu myStartMenu;
 
 void game_loop(int); // game animation loop
@@ -48,6 +50,8 @@ void init(void) {
 	pix[1].readBMPFile("tennisball.bmp");
 	pix[1].setTexture(1);
 	myBall.setTextureID(1);
+	paddle1 = Paddle(1);
+	paddle2 = Paddle(2);
 }
 
 void reset(void) {
@@ -85,6 +89,8 @@ void display(void) {
 		// Draw Table
 		myTable.draw_table();
 		myBall.draw();
+		paddle1.draw();
+		paddle2.draw();
 	}
 
 	else if (gameState == 2) {
@@ -128,6 +134,7 @@ void game_loop(int gameState) {
 			pause = 0;
 			turn = 1;
 		}
+
 	}
 
 	else{
@@ -151,6 +158,7 @@ void game_loop(int gameState) {
 		if(myBall.zPosition >= 2.0 || myBall.zPosition <= -2){
 			myBall.zSpeed = -myBall.zSpeed;
 			pause = 1;
+			//turn.
 			//running = 0;
 		}
 
@@ -180,11 +188,21 @@ void keyDown(unsigned char key, int x, int y) {
 	}
 	// Right
 	if (key == 'd') {
-		//position += right * deltaTime * speed;
+		if(turn == 2){
+			paddle1.translate(0.1,0,0);
+		}
+		else if(turn == 1){
+			paddle2.translate(0.1,0,0);
+		}
 	}
 	// Left
 	if (key == 'a') {
-		//position -= right * deltaTime * speed;
+		if(turn == 2){
+			paddle1.translate(-0.1,0,0);
+		}
+		else if(turn == 1){
+			paddle2.translate(-0.1,0,0);
+		}
 	}
 
 }
