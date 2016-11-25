@@ -15,15 +15,17 @@
 
 #include "pixmap/RGBpixmap.h"
 
+
 RGBpixmap pix[6];   // make six pixmaps
 
-GLint winWidth = 800, winHeight = 800, gameState = 1, moving = 0, xBegin = 0;
+GLint winWidth = 800, winHeight = 800, gameState = 0, pause = 0, turn = 1;
 
 //Declare a world containing all objects
 Camera myCamera;
 Light myLight;
 Table myTable;
 Ball myBall;
+StartMenu myStartMenu;
 
 void game_loop(int); // game animation loop
 
@@ -42,7 +44,7 @@ void init(void) {
 	pix[0].readBMPFile("hockey.bmp");
 	pix[0].setTexture(0);
 	myTable.setTextureID(0, 0);
-	
+
 	pix[1].readBMPFile("tennisball.bmp");
 	pix[1].setTexture(1);
 	myBall.setTextureID(1);
@@ -51,8 +53,8 @@ void init(void) {
 void reset(void) {
 	glutIdleFunc(NULL);
 	gameState = 0;
-	//view = 0;
-	//menu = 1;
+	pause = 0;
+	turn = 1;
 	glFlush();
 	glutPostRedisplay();
 }
@@ -63,12 +65,15 @@ void close(void) {
 
 void display(void) {
 
-	//Game has 3 states: 0 - Opening menu. 1 - Game is running. 2 - Game is over show score.
+	//Game has 3 states: 0 - Start menu. 1 - Game is running. 2 - Game is over show score.
 	if (gameState == 0) {
 		//Display the menu.
-		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//Camera.setProjectionMatrix(); //Sets 3D view
-		//menu.draw();
+		glClear(GL_COLOR_BUFFER_BIT);
+		glLoadIdentity();
+		glMatrixMode(GL_PROJECTION);
+		gluOrtho2D(-winWidth / 2, winWidth / 2, -winHeight / 2, winHeight / 2);
+
+		myStartMenu.drawStartMenu();
 	}
 	else if (gameState == 1) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
