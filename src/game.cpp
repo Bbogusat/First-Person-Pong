@@ -67,6 +67,8 @@ void display(void) {
 
 	//Game has 3 states: 0 - Start menu. 1 - Game is running. 2 - Game is over show score.
 	if (gameState == 0) {
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_CULL_FACE);
 		//Display the menu.
 		glClear(GL_COLOR_BUFFER_BIT);
 		glLoadIdentity();
@@ -76,6 +78,8 @@ void display(void) {
 		myStartMenu.drawStartMenu();
 	}
 	else if (gameState == 1) {
+		glEnable(GL_CULL_FACE);
+		glEnable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		myCamera.setProjectionMatrix(); //Sets 3D view
 		// Draw Table
@@ -84,6 +88,8 @@ void display(void) {
 	}
 
 	else if (gameState == 2) {
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_CULL_FACE);
 		//Display the end game state.
 		//gameover.draw();
 	}
