@@ -186,7 +186,6 @@ int main(int argc, char** argv) {
 	glEnable(GL_DEPTH_TEST);
 
 	glutDisplayFunc(display);
-	glutMotionFunc(mouseMotion);
 	glutMouseFunc(mouseAction);
 	glutKeyboardFunc(keyDown);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
