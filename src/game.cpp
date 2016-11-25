@@ -12,7 +12,7 @@
 #include "Camera.hpp"
 #include "Light.hpp"
 #include "mesh.hpp"
-
+#include "StartMenu.hpp"
 #include "pixmap/RGBpixmap.h"
 
 
@@ -107,14 +107,17 @@ void winReshapeFcn(GLint newWidth, GLint newHeight) {
 }
 
 void mouseAction(int button, int state, int x, int y) {
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && running == 0) {
-		running = 1;
-		game_loop(1);
+
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && gameState == 0) {
+		gameState = 1;
+		game_loop(gameState);
 	}
 	glutPostRedisplay();
 }
 
 void game_loop(int gameState) {
+	printf("Enters Game loop \n");
+	fflush(stdout);
 	//rotate the camera to the opposite side
 	if(pause == 1){
 		myCamera.rotate(0.0, 1.0, 0.0, 2.0);
@@ -155,10 +158,13 @@ void game_loop(int gameState) {
 
 
 	}
+	printf("Redisplay \n");
+	fflush(stdout);
+	glutPostRedisplay();
 	if (gameState == 1) {
-    	glutTimerFunc(40, game_loop, 1);  // callback every 40 ms
+    	glutTimerFunc(40, game_loop, gameState);  // callback every 40 ms
     }
-    glutPostRedisplay();
+
 }
 
 
