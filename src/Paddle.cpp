@@ -185,6 +185,7 @@ void Paddle::setTextureID(int index, int textureid) {
 }
 
 GLfloat Paddle::getBounds(){
+	/*
 	if(player == 1){
 		return face
 
@@ -192,5 +193,6 @@ GLfloat Paddle::getBounds(){
 	else if(player == 2){
 
 	}
+	*/
 }
 

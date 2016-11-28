@@ -24,6 +24,7 @@ public:
 	bool isBackface(int);
 	GLfloat getFaceShade(int);
 	void setTextureID(int index, int textureid);
+	GLfloat getBounds();
 };
 
 #endif
