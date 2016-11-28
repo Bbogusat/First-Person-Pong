@@ -6,7 +6,7 @@
 bool DEBUG = false;
 
 Camera::Camera(){
-	eye.x = 0, eye.y = 5.0, eye.z = 5;
+	eye.x = 0, eye.y = 5.0, eye.z = 5.0;
 	ref.x = 0.0, ref.y = 0.0, ref.z = 0.0;
 	viewup.x = 0.0,viewup.y = 1.0, viewup.z = 0.0;
 	aspect = 1.0, viewAngle = 40.0, nearDist = 1.0, farDist = 30.0;

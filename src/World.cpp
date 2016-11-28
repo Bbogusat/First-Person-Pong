@@ -5,8 +5,6 @@
 #include "World.hpp"
 
 World::World() {
-	list[0] = new Paddle();
-	list[1] = new Paddle();
 	list[2] = new Ball();
 	list[3] = new Table();
 

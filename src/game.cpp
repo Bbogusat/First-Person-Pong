@@ -18,15 +18,15 @@
 
 RGBpixmap pix[6];   // make six pixmaps
 
-GLint winWidth = 800, winHeight = 800, gameState = 0, pause = 0, turn = 1;
+GLint winWidth = 800, winHeight = 800, gameState = 0, pause = 0, turn = 2;
+static const int numPaddles = 2;
 
 //Declare a world containing all objects
 Camera myCamera;
 Light myLight;
 Table myTable;
 Ball myBall;
-Paddle paddle1;
-Paddle paddle2;
+Paddle myPaddles[numPaddles];
 StartMenu myStartMenu;
 
 void game_loop(int); // game animation loop
@@ -50,15 +50,16 @@ void init(void) {
 	pix[1].readBMPFile("tennisball.bmp");
 	pix[1].setTexture(1);
 	myBall.setTextureID(1);
-	paddle1 = Paddle(1);
-	paddle2 = Paddle(2);
+	for(int i = 0; i < numPaddles; i++){
+		myPaddles[i] = Paddle(i+1);
+	}
 }
 
 void reset(void) {
 	glutIdleFunc(NULL);
 	gameState = 0;
 	pause = 0;
-	turn = 1;
+	turn = 2;
 	glFlush();
 	glutPostRedisplay();
 }
@@ -66,7 +67,14 @@ void reset(void) {
 void close(void) {
 	exit(1);
 }
-
+void turn_swap(void){
+	if(turn == 1){
+		turn = 2;
+	}
+	else if(turn == 2){
+		turn = 1;
+	}
+}
 void display(void) {
 
 	//Game has 3 states: 0 - Start menu. 1 - Game is running. 2 - Game is over show score.
@@ -89,8 +97,9 @@ void display(void) {
 		// Draw Table
 		myTable.draw_table();
 		myBall.draw();
-		paddle1.draw();
-		paddle2.draw();
+		for(int i = 0; i < numPaddles; i++){
+			myPaddles[i].draw();
+		}
 	}
 
 	else if (gameState == 2) {
@@ -122,17 +131,21 @@ void mouseAction(int button, int state, int x, int y) {
 }
 
 void game_loop(int gameState) {
-	printf("Enters Game loop \n");
-	fflush(stdout);
+	//printf("Enters Game loop \n");
+	//fflush(stdout);
 	//rotate the camera to the opposite side
 	if(pause == 1){
 		myCamera.rotate(0.0, 1.0, 0.0, 2.0);
+		printf("turn %d \n",turn);
+		fflush(stdout);
 		if(turn == 1 && myCamera.eye.z <= -5){
+			printf("Entered -5\n");
+			fflush(stdout);
 			pause = 0;
-			turn = 2;
 		}else if (turn == 2 && myCamera.eye.z >= 5){
+			printf("Entered 5\n");
+			fflush(stdout);
 			pause = 0;
-			turn = 1;
 		}
 
 	}
@@ -158,16 +171,19 @@ void game_loop(int gameState) {
 		if(myBall.zPosition >= 2.0 || myBall.zPosition <= -2){
 			myBall.zSpeed = -myBall.zSpeed;
 			pause = 1;
+			turn_swap();
 			//turn.
 			//running = 0;
 		}
 
+		//if(turn )
+	//	Point bound[] = paddle1.getBounds();
 		//Check bounds for paddle collision
 
 
 	}
-	printf("Redisplay \n");
-	fflush(stdout);
+	//printf("Redisplay \n");
+	//ddfflush(stdout);
 	glutPostRedisplay();
 	if (gameState == 1) {
     	glutTimerFunc(40, game_loop, gameState);  // callback every 40 ms
@@ -188,21 +204,11 @@ void keyDown(unsigned char key, int x, int y) {
 	}
 	// Right
 	if (key == 'd') {
-		if(turn == 2){
-			paddle1.translate(0.1,0,0);
-		}
-		else if(turn == 1){
-			paddle2.translate(0.1,0,0);
-		}
+		myPaddles[turn-1].translate(0.1,0,0);
 	}
 	// Left
 	if (key == 'a') {
-		if(turn == 2){
-			paddle1.translate(-0.1,0,0);
-		}
-		else if(turn == 1){
-			paddle2.translate(-0.1,0,0);
-		}
+		myPaddles[turn-1].translate(-0.1,0,0);
 	}
 
 }

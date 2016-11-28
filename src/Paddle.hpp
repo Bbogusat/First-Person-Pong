@@ -5,10 +5,12 @@
 #include <stdio.h>
 #include <math.h>
 #include "Shape.hpp"
+#include "Point.hpp"
 
 
 class Paddle: public Shape {
 protected:
+	GLint player;
 	GLfloat vertex[8][3];
 	GLint face[6][4];
 	GLfloat faceColor[6][3];      	 // face color
@@ -18,13 +20,13 @@ protected:
 
 public:
 	Paddle();
-	Paddle(int player);
+	Paddle(int playernum);
 	void draw_face(int);
 	void draw();
 	bool isBackface(int);
 	GLfloat getFaceShade(int);
 	void setTextureID(int index, int textureid);
-	GLfloat getBounds();
+	Point getBounds();
 };
 
 #endif
