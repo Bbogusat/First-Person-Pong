@@ -15,12 +15,12 @@
 
 class Ball: public Shape{
 	protected:
-		GLfloat radius, r ,g, b; //radius, red, green, blue
+		GLfloat radius, r ,g, b, scale_value; //radius, red, green, blue
 		GLint splices, stacks;
 		GLuint textureID;
 		GLUquadric *quad;
 	public:
-		GLfloat xSpeed, zSpeed, xPosition, zPosition;
+		GLfloat xSpeed, zSpeed, xPosition, zPosition, scaledRadius;
 		Ball();
 		void draw();
 		void translate(GLfloat tx, GLfloat ty, GLfloat tz);

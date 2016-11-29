@@ -40,17 +40,18 @@ Paddle::Paddle(){
 
 	player = 0;
 	xPosition = 0;
+	zPosition = 0;
 }
 
 Paddle::Paddle(int playernum){
-	vertex[0][0] = -0.2;vertex[0][1] = -.1;vertex[0][2] = -.05;
-	vertex[1][0] = -0.2;vertex[1][1] = .1; vertex[1][2] = -.05;
-	vertex[2][0] = 0.2;vertex[2][1] = -.1; vertex[2][2] = -.05;
-	vertex[3][0] = .2;vertex[3][1] = .1;vertex[3][2] = -.05;
-	vertex[4][0] = -.2;vertex[4][1] = -.1;vertex[4][2] = .05;
-	vertex[5][0] = -.2;vertex[5][1] = .1; vertex[5][2] = .05;
-	vertex[6][0] = .2;vertex[6][1] = -.1;vertex[6][2] = .05;
-	vertex[7][0] = .2;vertex[7][1] = .1;vertex[7][2] = .05;
+	vertex[0][0] = -0.2;vertex[0][1] = -.1;vertex[0][2] = -.01;
+	vertex[1][0] = -0.2;vertex[1][1] = .1; vertex[1][2] = -.01;
+	vertex[2][0] = 0.2;vertex[2][1] = -.1; vertex[2][2] = -.01;
+	vertex[3][0] = .2;vertex[3][1] = .1;vertex[3][2] = -.01;
+	vertex[4][0] = -.2;vertex[4][1] = -.1;vertex[4][2] = .01;
+	vertex[5][0] = -.2;vertex[5][1] = .1; vertex[5][2] = .01;
+	vertex[6][0] = .2;vertex[6][1] = -.1;vertex[6][2] = .01;
+	vertex[7][0] = .2;vertex[7][1] = .1;vertex[7][2] = .01;
 
 	face[0][0] = 0;face[0][1] = 1;face[0][2] = 3; face[0][3] = 2;
 	face[1][0] = 3;face[1][1] = 7;face[1][2] = 6;face[1][3] = 2;
@@ -73,6 +74,8 @@ Paddle::Paddle(int playernum){
 	paddle_face_norm_mc[4][0] = 0.0, paddle_face_norm_mc[4][1] = 1.0, paddle_face_norm_mc[4][2] = 0.0;
 	paddle_face_norm_mc[5][0] = 0.0, paddle_face_norm_mc[5][1] = -1.0, paddle_face_norm_mc[5][2] = 0.0;
 
+	xPosition = 0;
+	zPosition = 0;
 	if(playernum == 1){
 		player = 1;
 		this->translate(0,1.1,-2);
@@ -81,12 +84,13 @@ Paddle::Paddle(int playernum){
 		player = 2;
 		this->translate(0,1.1,2);
 	}
-	xPosition = 0;
+
 }
 
 void Paddle::translate(GLfloat tx, GLfloat ty, GLfloat tz) {
 	MC.translate(tx, ty, tz);
 	xPosition += tx;
+	zPosition += tz;
 }
 
 void Paddle::draw_face(int i)
@@ -200,18 +204,18 @@ std::vector<Point> Paddle::getBounds(){
 	if(player == 1){
 		bounds[0].x = vertex[face[2][0]][0] + xPosition;
 		bounds[0].y = vertex[face[2][0]][1];
-		bounds[0].z = vertex[face[2][0]][2];
+		bounds[0].z = vertex[face[2][0]][2] + zPosition;
 		bounds[1].x = vertex[face[2][2]][0] + xPosition;
 		bounds[1].y = vertex[face[2][2]][1];
-		bounds[1].z = vertex[face[2][2]][2];
+		bounds[1].z = vertex[face[2][2]][2] + zPosition;
 	}
 	else if(player == 2){
-		bounds[0].x = vertex[face[0][0]][0] + xPosition;
-		bounds[0].y = vertex[face[0][0]][1];
-		bounds[0].z = vertex[face[0][0]][2];
-		bounds[1].x = vertex[face[0][2]][0] + xPosition;
-		bounds[1].y = vertex[face[0][2]][1];
-		bounds[1].z = vertex[face[0][2]][2];
+		bounds[0].x = vertex[face[0][2]][0] + xPosition;
+		bounds[0].y = vertex[face[0][2]][1];
+		bounds[0].z = vertex[face[0][2]][2] + zPosition;
+		bounds[1].x = vertex[face[0][0]][0] + xPosition;
+		bounds[1].y = vertex[face[0][0]][1];
+		bounds[1].z = vertex[face[0][0]][2] + zPosition;
 	}
 
 

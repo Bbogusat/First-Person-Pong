@@ -13,7 +13,7 @@
 class Paddle: public Shape {
 protected:
 	GLint player;
-	GLfloat xPosition;
+	GLfloat xPosition, zPosition;
 	GLfloat vertex[8][3];
 	GLint face[6][4];
 	GLfloat faceColor[6][3];      	 // face color

@@ -13,9 +13,10 @@ Ball::Ball(){
 	r = 1.0;
 	b = 1.0;
 	g = 1.0;
+	scale_value = -.85;
 	xSpeed = .05;
 	zSpeed = .05;
-	this->scale_change(-.85);
+	this->scale_change(scale_value);
 	this->translate(0, 1.08, 0);
 
 	quad = gluNewQuadric();
@@ -26,6 +27,9 @@ Ball::Ball(){
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	scaledRadius = radius*(1+scale_value);
+	xPosition = 0;
+	zPosition = 0;
 }
 
 void Ball::translate(GLfloat tx, GLfloat ty, GLfloat tz) {
