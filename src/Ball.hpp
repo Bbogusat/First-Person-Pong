@@ -23,6 +23,7 @@ class Ball: public Shape{
 		GLfloat xSpeed, zSpeed, xPosition, zPosition;
 		Ball();
 		void draw();
+		void translate(GLfloat tx, GLfloat ty, GLfloat tz);
 		void set_colour(GLfloat, GLfloat, GLfloat);
 		void setTextureID(int textureID);
 };

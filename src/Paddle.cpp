@@ -39,6 +39,7 @@ Paddle::Paddle(){
 	paddle_face_norm_mc[5][0] = 0.0, paddle_face_norm_mc[5][1] = -1.0, paddle_face_norm_mc[5][2] = 0.0;
 
 	player = 0;
+	xPosition = 0;
 }
 
 Paddle::Paddle(int playernum){
@@ -80,6 +81,12 @@ Paddle::Paddle(int playernum){
 		player = 2;
 		this->translate(0,1.1,2);
 	}
+	xPosition = 0;
+}
+
+void Paddle::translate(GLfloat tx, GLfloat ty, GLfloat tz) {
+	MC.translate(tx, ty, tz);
+	xPosition += tx;
 }
 
 void Paddle::draw_face(int i)
@@ -186,30 +193,29 @@ void Paddle::setTextureID(int index, int textureid) {
 	textureID[index] = textureid;
 }
 
-Point Paddle::getBounds(){
-	Point bounds[2];
+std::vector<Point> Paddle::getBounds(){
+	std::vector<Point> bounds(2);
 	Point point1;
 	Point point2;
 	if(player == 1){
-		point1.x = vertex[face[2][0]][0];
-		point1.y = vertex[face[2][0]][1];
-		point1.z = vertex[face[2][0]][2];
-		point2.x = vertex[face[2][2]][0];
-		point2.y = vertex[face[2][2]][1];
-		point2.z = vertex[face[2][2]][2];
+		bounds[0].x = vertex[face[2][0]][0] + xPosition;
+		bounds[0].y = vertex[face[2][0]][1];
+		bounds[0].z = vertex[face[2][0]][2];
+		bounds[1].x = vertex[face[2][2]][0] + xPosition;
+		bounds[1].y = vertex[face[2][2]][1];
+		bounds[1].z = vertex[face[2][2]][2];
 	}
 	else if(player == 2){
-		point1.x = vertex[face[0][0]][0];
-		point1.y = vertex[face[0][0]][1];
-		point1.z = vertex[face[0][0]][2];
-		point2.x = vertex[face[0][2]][0];
-		point2.y = vertex[face[0][2]][1];
-		point2.z = vertex[face[0][2]][2];
+		bounds[0].x = vertex[face[0][0]][0] + xPosition;
+		bounds[0].y = vertex[face[0][0]][1];
+		bounds[0].z = vertex[face[0][0]][2];
+		bounds[1].x = vertex[face[0][2]][0] + xPosition;
+		bounds[1].y = vertex[face[0][2]][1];
+		bounds[1].z = vertex[face[0][2]][2];
 	}
-	bounds[0] = point1;
-	bounds[1] = point2;
 
-	return *bounds;
+
+	return bounds;
 
 
 }

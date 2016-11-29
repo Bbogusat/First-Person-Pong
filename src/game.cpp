@@ -136,14 +136,11 @@ void game_loop(int gameState) {
 	//rotate the camera to the opposite side
 	if(pause == 1){
 		myCamera.rotate(0.0, 1.0, 0.0, 2.0);
-		printf("turn %d \n",turn);
 		fflush(stdout);
 		if(turn == 1 && myCamera.eye.z <= -5){
-			printf("Entered -5\n");
 			fflush(stdout);
 			pause = 0;
 		}else if (turn == 2 && myCamera.eye.z >= 5){
-			printf("Entered 5\n");
 			fflush(stdout);
 			pause = 0;
 		}
@@ -153,8 +150,6 @@ void game_loop(int gameState) {
 	else{
 		//update ball position
 		myBall.translate(myBall.xSpeed, 0, myBall.zSpeed);
-		myBall.xPosition += myBall.xSpeed;
-		myBall.zPosition += myBall.zSpeed;
 
 		myBall.rotate_mc(1, 0, 0, myBall.zSpeed*-500);
 		myBall.rotate_mc(0, 0, 1, myBall.xSpeed*500);
@@ -168,6 +163,7 @@ void game_loop(int gameState) {
 		}
 
 		//Check bounds for endgame
+		/*
 		if(myBall.zPosition >= 2.0 || myBall.zPosition <= -2){
 			myBall.zSpeed = -myBall.zSpeed;
 			pause = 1;
@@ -175,15 +171,38 @@ void game_loop(int gameState) {
 			//turn.
 			//running = 0;
 		}
+		*/
 
-		//if(turn )
-	//	Point bound[] = paddle1.getBounds();
+		//PADDLE WIDTH IS 0.05 in the z.
+		std::vector<Point> bounds = myPaddles[turn-1].getBounds();
+
+		printf("Z: %f, Ball x: %f | Paddle x: %f  || %f \n", myBall.zPosition, GLfloat(myBall.xPosition), bounds[0].x, bounds[1].x);
+		fflush(stdout);
+		if(turn == 2){
+			if((myBall.zPosition >= 2.0) && (bounds[0].x <= myBall.xPosition) && (myBall.xPosition <= bounds[1].x)){
+				pause = 1;
+				myBall.zSpeed = -myBall.zSpeed;
+				turn_swap();
+			}else if((myBall.zPosition >= 2.0) || (myBall.zPosition <= -2.0)){
+				printf("\nGame OVER\n");
+				gameState = 0;
+			}
+		}else if(turn == 1){
+			if((myBall.zPosition <= -2.0) && (bounds[1].x <= myBall.xPosition) && (myBall.xPosition <= bounds[0].x)){
+				pause = 1;
+				myBall.zSpeed = -myBall.zSpeed;
+				turn_swap();
+			}else if((myBall.zPosition >= 2.0) || (myBall.zPosition <= -2.0)){
+				printf("\nGame OVER\n");
+				gameState = 0;
+			}
+		}
+
+
 		//Check bounds for paddle collision
 
 
 	}
-	//printf("Redisplay \n");
-	//ddfflush(stdout);
 	glutPostRedisplay();
 	if (gameState == 1) {
     	glutTimerFunc(40, game_loop, gameState);  // callback every 40 ms

@@ -14,7 +14,7 @@ Ball::Ball(){
 	b = 1.0;
 	g = 1.0;
 	xSpeed = .05;
-	zSpeed = .1;
+	zSpeed = .05;
 	this->scale_change(-.85);
 	this->translate(0, 1.08, 0);
 
@@ -26,6 +26,12 @@ Ball::Ball(){
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+}
+
+void Ball::translate(GLfloat tx, GLfloat ty, GLfloat tz) {
+	MC.translate(tx, ty, tz);
+	xPosition += tx;
+	zPosition += tz;
 }
 
 /*
