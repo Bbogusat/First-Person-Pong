@@ -8,9 +8,7 @@
 #include <GL/glut.h>
 #include "glaux.h" // for reading bmp files
 
-#include "Paddle.hpp"
-#include "Ball.hpp"
-#include "Table.hpp"
+#include "World.hpp"
 #include "Camera.hpp"
 #include "Light.hpp"
 #include "mesh.hpp"
@@ -45,15 +43,29 @@ void init(void) {
 	glShadeModel(GL_SMOOTH);
 
 	// load and and set textures when needed
-	pix[0].readBMPFile("hockey.bmp");
+	pix[0].readBMPFile("Pong table.bmp");
 	pix[0].setTexture(0);
-	myTable.setTextureID(0, 0);
 
 	pix[1].readBMPFile("tennisball.bmp");
 	pix[1].setTexture(1);
+
+	pix[2].readBMPFile("Wood.bmp");
+	pix[2].setTexture(2);
+
+	pix[3].readBMPFile("table_texture.bmp");
+	pix[3].setTexture(3);
+
+	myTable.setTextureID(0, 0);
+	myTable.setTextureID(1, 2);
+	myTable.setTextureID(2, 3);
+
+
 	myBall.setTextureID(1);
+
+
 	for(int i = 0; i < numPaddles; i++){
 		myPaddles[i] = Paddle(i+1);
+		myPaddles[i].setTextureID(2);
 	}
 }
 
@@ -69,7 +81,6 @@ void reset(void) {
 void close(void) {
 	exit(1);
 }
-
 void turn_swap(void){
 	if(turn == 1){
 		turn = 2;
@@ -79,11 +90,13 @@ void turn_swap(void){
 	}
 }
 
+
 void game_over(void){
 	printf("\n---Game Over---\n");
 	fflush(stdout);
 	gameState = 2;
 }
+
 
 void paddle_collision(void){
 	std::vector<Point> bounds = myPaddles[turn-1].getBounds();
@@ -110,7 +123,6 @@ void display(void) {
 
 	//Game has 3 states: 0 - Start menu. 1 - Game is running. 2 - Game is over show score.
 	if (gameState == 0) {
-		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_DEPTH_TEST);
 		glDisable(GL_CULL_FACE);
 		//Display the menu.
@@ -127,19 +139,16 @@ void display(void) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		myCamera.setProjectionMatrix(); //Sets 3D view
 		// Draw Table
-		glEnable(GL_TEXTURE_2D);
 		myTable.draw_table();
 		myBall.draw();
-		glDisable(GL_TEXTURE_2D);
 		for(int i = 0; i < numPaddles; i++){
 			myPaddles[i].draw();
 		}
 	}else if (gameState == 2) {
-		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_DEPTH_TEST);
 		glDisable(GL_CULL_FACE);
 		//Display the end game state.
-		//myEndGame.draw();
+		//gameover.draw();
 	}
 
 	glFlush();
@@ -160,24 +169,25 @@ void mouseAction(int button, int state, int x, int y) {
 		gameState = 1;
 		game_loop(gameState);
 	}
-	else if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && gameState == 2) {
-		reset();
-	}
 	glutPostRedisplay();
 }
 
 void game_loop(int gameState) {
-	//Game is Running
+	//rotate the camera to the opposite side
 	if(gameState == 1){
-		//rotate the camera to the opposite side
 		if(pause == 1){
 			myCamera.rotate(0.0, 1.0, 0.0, 5.0);
+			fflush(stdout);
 			if(turn == 1 && myCamera.eye.z <= -5){
+				fflush(stdout);
 				pause = 0;
 			}else if (turn == 2 && myCamera.eye.z >= 5){
+				fflush(stdout);
 				pause = 0;
 			}
+
 		}
+
 		//else{
 			//update ball position
 			myBall.translate(myBall.xSpeed, 0, myBall.zSpeed);
@@ -193,23 +203,44 @@ void game_loop(int gameState) {
 				myBall.xSpeed = 0.01;
 			}
 			paddle_collision();
+		}
+		glutPostRedisplay();
+		if (gameState == 1) {
 			glutTimerFunc(40, game_loop, gameState);  // callback every 40 ms
 		}
 	//}else if(gameState == 2){
 		//glutPostRedisplay();
 	//}
-	glutPostRedisplay();
+
 }
 
+
 void keyDown(unsigned char key, int x, int y) {
+	GLint mod;
+	if(turn == 2){
+		mod = 1;
+	}else if(turn == 1){
+		mod = -1;
+	}
+	//forward
+	if (key == 'w') {
+		//position += direction * deltaTime * speed;
+	}
+	// Move backward
+	if (key == 's') {
+		//position -= direction * deltaTime * speed;
+	}
 	// Right
 	if (key == 'd') {
-		myPaddles[turn-1].translate(0.1,0,0);
+
+
+		myPaddles[turn-1].translate(0.1*mod,0,0);
 	}
 	// Left
 	if (key == 'a') {
-		myPaddles[turn-1].translate(-0.1,0,0);
+		myPaddles[turn-1].translate(-0.1*mod,0,0);
 	}
+
 }
 
 int main(int argc, char** argv) {
@@ -224,7 +255,6 @@ int main(int argc, char** argv) {
 	glCullFace(GL_BACK);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_TEXTURE_2D);
 
 	glutDisplayFunc(display);
 	glutMouseFunc(mouseAction);
@@ -233,6 +263,4 @@ int main(int argc, char** argv) {
 	glutMainLoop();
 	return 0;
 }
-
-
 

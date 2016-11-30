@@ -63,6 +63,7 @@ void Ball::set_colour(GLfloat red, GLfloat green, GLfloat blue){
  * 	none
  */
 void Ball::draw(){
+	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glPushMatrix();
 	this->ctm_multiply();
@@ -70,6 +71,7 @@ void Ball::draw(){
 	glColor3f(r, g, b);
 	gluSphere(quad, radius, splices, stacks);
 	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
 }
 
 void Ball::setTextureID(int textureid) {

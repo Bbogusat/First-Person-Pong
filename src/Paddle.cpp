@@ -95,10 +95,10 @@ void Paddle::translate(GLfloat tx, GLfloat ty, GLfloat tz) {
 
 void Paddle::draw_face(int i)
 {
-	/*if (isTexture) {
+		glEnable(GL_TEXTURE_2D);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glBindTexture(GL_TEXTURE_2D, textureID[i]);
+		glBindTexture(GL_TEXTURE_2D, textureID);
 		glBegin(GL_QUADS);
 			glTexCoord2d(0.0,0.0);
 			glVertex3fv(&vertex[face[i][0]][0]);
@@ -107,16 +107,19 @@ void Paddle::draw_face(int i)
 			glTexCoord2d(1.0,1.0);
 			glVertex3fv(&vertex[face[i][2]][0]);
 			glTexCoord2d(0.0,1.0);
-			glVertex3fv(&vertex[face[i][3]][0]);\
+			glVertex3fv(&vertex[face[i][3]][0]);
 		glEnd();
-*/
+		glDisable(GL_TEXTURE_2D);
+
 	//} else {
+	/*
 		glBegin(GL_POLYGON);
 			glVertex3fv(&vertex[face[i][0]][0]);
 			glVertex3fv(&vertex[face[i][1]][0]);
 			glVertex3fv(&vertex[face[i][2]][0]);
 			glVertex3fv(&vertex[face[i][3]][0]);
 		glEnd();
+		*/
 	//}
 }
 
@@ -127,18 +130,18 @@ void Paddle::draw()
 	glScalef(s, s, s);
 
     for (int i = 0; i < 6; i++) {
-    	if (!isBackface(i)) {
+    	//if (!isBackface(i)) {
     		//if (!isTexture) {
 				//if (isShading ) {
-					GLfloat shade = getFaceShade(i);
-					glColor3f(faceColor[i][0]*shade, faceColor[i][1]*shade, faceColor[i][2]*shade);
+					//GLfloat shade = getFaceShade(i);
+					//glColor3f(faceColor[i][0]*shade, faceColor[i][1]*shade, faceColor[i][2]*shade);
 				//} else {
 				//	glColor3f(faceColor[i][0], faceColor[i][1], faceColor[i][2]);
 				//}
     		//}
 
     		draw_face(i);
-    	}
+    	//}
     }
     glPopMatrix();
 }
@@ -193,8 +196,8 @@ GLfloat Paddle::getFaceShade(int faceindex) {
 }
 
 
-void Paddle::setTextureID(int index, int textureid) {
-	textureID[index] = textureid;
+void Paddle::setTextureID(int textureid) {
+	textureID = textureid;
 }
 
 std::vector<Point> Paddle::getBounds(){

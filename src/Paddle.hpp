@@ -19,7 +19,7 @@ protected:
 	GLfloat faceColor[6][3];      	 // face color
 	GLfloat paddle_face_norm_mc[6][3]; // normal face in mc
 	GLfloat paddle_face_norm_wc[6][4]; // normal face in wc
-	GLuint textureID[6];             // face textureID for face i
+	GLuint textureID;             // face textureID for face i
 
 
 public:
@@ -31,7 +31,7 @@ public:
 	bool isBackface(int);
 	GLfloat getFaceShade(int);
 	std::vector<Point> getBounds();
-	void setTextureID(int index, int textureid);
+	void setTextureID(int textureid);
 
 };
 
