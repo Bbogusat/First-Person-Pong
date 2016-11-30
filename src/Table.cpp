@@ -11,6 +11,7 @@ Table::Table() {}
 
 void Table::draw_table() {
 	//draw surface with hockey texture
+	glColor3f(1.0, 1.0, 1.0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBegin( GL_QUADS);
 	glTexCoord2f(0., 0.); glVertex3f(1, 1, 2);
