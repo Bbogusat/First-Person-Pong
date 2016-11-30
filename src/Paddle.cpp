@@ -95,7 +95,6 @@ void Paddle::translate(GLfloat tx, GLfloat ty, GLfloat tz) {
 
 void Paddle::draw_face(int i)
 {
-		glEnable(GL_TEXTURE_2D);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glBindTexture(GL_TEXTURE_2D, textureID);
@@ -109,7 +108,6 @@ void Paddle::draw_face(int i)
 			glTexCoord2d(0.0,1.0);
 			glVertex3fv(&vertex[face[i][3]][0]);
 		glEnd();
-		glDisable(GL_TEXTURE_2D);
 
 	//} else {
 	/*

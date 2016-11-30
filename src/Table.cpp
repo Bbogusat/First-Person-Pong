@@ -9,7 +9,6 @@ Table::Table() {}
 
 void Table::draw_table() {
 	//draw surface with hockey texture
-	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, textureID[0]);
 	glBegin( GL_QUADS);
 	glTexCoord2f(0., 0.); glVertex3f(1, 1, 2);
