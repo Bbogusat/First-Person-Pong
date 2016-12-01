@@ -41,6 +41,7 @@ Paddle::Paddle(){
 	player = 0;
 	xPosition = 0;
 	zPosition = 0;
+	textureID = 0;
 }
 
 Paddle::Paddle(int playernum){
@@ -84,6 +85,7 @@ Paddle::Paddle(int playernum){
 		player = 2;
 		this->translate(0,1.1,2);
 	}
+	textureID = 0;
 
 }
 
@@ -95,9 +97,11 @@ void Paddle::translate(GLfloat tx, GLfloat ty, GLfloat tz) {
 
 void Paddle::draw_face(int i)
 {
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, textureID);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glBindTexture(GL_TEXTURE_2D, textureID);
+
 		glBegin(GL_QUADS);
 			glTexCoord2d(0.0,0.0);
 			glVertex3fv(&vertex[face[i][0]][0]);
@@ -128,6 +132,7 @@ void Paddle::draw()
 	glScalef(s, s, s);
 
     for (int i = 0; i < 6; i++) {
+    	glBindTexture(GL_TEXTURE_2D, textureID);
     	//if (!isBackface(i)) {
     		//if (!isTexture) {
 				//if (isShading ) {

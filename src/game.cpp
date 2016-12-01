@@ -13,10 +13,12 @@
 #include "StartMenu.hpp"
 #include "EndGame.hpp"
 #include "pixmap/RGBpixmap.h"
+#include <windows.h>
+#include <mmsystem.h>
 
 RGBpixmap pix[6];   // make six pixmaps
 
-GLint winWidth = 800, winHeight = 800, gameState = 0, pause = 0, turn = 2;
+GLint winWidth = 600, winHeight = 600, gameState = 0, pause = 0, turn = 2;
 static const int numPaddles = 2;
 
 //Declare a world containing all objects
@@ -99,7 +101,8 @@ void paddle_collision(void) {
 				&& (bounds[0].x >= myBall.xPosition)
 				&& (myBall.xPosition >= bounds[1].x)) {
 			pause = 1;
-			myBall.zSpeed = -myBall.zSpeed;
+			myBall.zSpeed = -myBall.zSpeed*1.05;
+			myBall.xSpeed = myBall.xSpeed*(2);
 			turn_swap();
 		} else if (myBall.zPosition <= bounds[0].z) {
 			game_over();
@@ -110,7 +113,8 @@ void paddle_collision(void) {
 				&& (bounds[0].x >= myBall.xPosition)
 				&& (myBall.xPosition >= bounds[1].x)) {
 			pause = 1;
-			myBall.zSpeed = -myBall.zSpeed;
+			myBall.zSpeed = -myBall.zSpeed*1.05;
+			myBall.xSpeed = myBall.xSpeed*(2);
 			turn_swap();
 		} else if (myBall.zPosition >= bounds[0].z) {
 			game_over();
@@ -140,10 +144,11 @@ void display(void) {
 		glEnable(GL_TEXTURE_2D);
 		myTable.draw_table();
 		myBall.draw();
-		glDisable(GL_TEXTURE_2D);
+
 		for (int i = 0; i < numPaddles; i++) {
 			myPaddles[i].draw();
 		}
+		glDisable(GL_TEXTURE_2D);
 	} else if (gameState == 2) {
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_DEPTH_TEST);
@@ -172,6 +177,7 @@ void winReshapeFcn(GLint newWidth, GLint newHeight) {
 void mouseAction(int button, int state, int x, int y) {
 
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && gameState == 0) {
+		PlaySound(TEXT("Killers.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 		gameState = 1;
 		game_loop(gameState);
 	}
@@ -215,23 +221,45 @@ void game_loop(int state) {
 }
 
 void keyDown(unsigned char key, int x, int y) {
+	std::vector<Point> check = myPaddles[turn - 1].getBounds();
 	GLint mod;
+	GLfloat maxleft, maxright;
+	maxright = 0.6;
+	maxleft = -0.6;
+
+	bool right,left = false;
 	if (turn == 2) {
 		mod = 1;
+		//printf("bounds = %f || %f \n", check[1].x + 0.1, maxright);
+		//fflush(stdout);
+		if((maxright - check[1].x) < 0.1){
+			right = true;
+		}
+		if((check[0].x - 0.1) > maxleft){
+			left = true;
+		}
 	} else if (turn == 1) {
 		mod = -1;
+		if((check[1].x + 0.1) < maxright){
+			left = true;
+		}
+		if((check[0].x - 0.1) > maxleft){
+			right = true;
+		}
 	}
 	// Right
-	if (key == 'd') {
+	if ((key == 'd') && right) {
 		myPaddles[turn - 1].translate(0.1 * mod, 0, 0);
 	}
 	// Left
-	if (key == 'a') {
+	if ((key == 'a') && left) {
 		myPaddles[turn - 1].translate(-0.1 * mod, 0, 0);
 	}
 }
 
 int main(int argc, char** argv) {
+
+
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowPosition(100, 100);
