@@ -73,6 +73,10 @@ void reset(void) {
 	gameState = 0;
 	pause = 0;
 	turn = 2;
+	myCamera.setDefaultCamera();
+	myBall.setDefaultBall();
+	myPaddles[0].setDefaultPaddle(1);
+	myPaddles[1].setDefaultPaddle(2);
 	glFlush();
 	glutPostRedisplay();
 }
@@ -177,9 +181,11 @@ void winReshapeFcn(GLint newWidth, GLint newHeight) {
 void mouseAction(int button, int state, int x, int y) {
 
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && gameState == 0) {
-		PlaySound(TEXT("Killers.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 		gameState = 1;
 		game_loop(gameState);
+	}else if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN
+			&& gameState == 2) {
+		reset();
 	}
 	glutPostRedisplay();
 }
@@ -227,12 +233,12 @@ void keyDown(unsigned char key, int x, int y) {
 	maxright = 0.6;
 	maxleft = -0.6;
 
-	bool right,left = false;
+	bool right = false,left = false;
 	if (turn == 2) {
 		mod = 1;
 		//printf("bounds = %f || %f \n", check[1].x + 0.1, maxright);
 		//fflush(stdout);
-		if((maxright - check[1].x) < 0.1){
+		if((check[1].x) < maxright){
 			right = true;
 		}
 		if((check[0].x - 0.1) > maxleft){
@@ -258,7 +264,7 @@ void keyDown(unsigned char key, int x, int y) {
 }
 
 int main(int argc, char** argv) {
-
+	PlaySound(TEXT("Killers.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB);

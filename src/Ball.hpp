@@ -22,6 +22,7 @@ class Ball: public Shape{
 	public:
 		GLfloat xSpeed, zSpeed, xPosition, zPosition, scaledRadius;
 		Ball();
+		void setDefaultBall();
 		void draw();
 		void translate(GLfloat tx, GLfloat ty, GLfloat tz);
 		void set_colour(GLfloat, GLfloat, GLfloat);

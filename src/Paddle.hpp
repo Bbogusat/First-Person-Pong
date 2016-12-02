@@ -25,6 +25,7 @@ protected:
 public:
 	Paddle();
 	Paddle(int playernum);
+	void setDefaultPaddle(int playernum);
 	void draw_face(int);
 	void draw();
 	void translate(GLfloat tx, GLfloat ty, GLfloat tz);
