@@ -6,7 +6,7 @@
 #include "glsl/Angel.h"
 #include <GL/glew.h>
 #include <GL/glut.h>
-#include "glaux.h" // for reading bmp files#include "World.hpp"
+#include "glaux.h"#include "World.hpp"
 #include "Camera.hpp"
 #include "Light.hpp"
 #include "mesh.hpp"
@@ -15,10 +15,11 @@
 #include "pixmap/RGBpixmap.h"
 #include <windows.h>
 #include <mmsystem.h>
+#include <time.h>
 
-RGBpixmap pix[6];   // make six pixmaps
+RGBpixmap pix[4];   // make four pixmaps
 
-GLint winWidth = 600, winHeight = 600, gameState = 0, pause = 0, turn = 2;
+GLint winWidth = 650, winHeight = 650, gameState = 0, pause = 0, turn = 2;
 static const int numPaddles = 2;
 
 //Declare a world containing all objects
@@ -31,8 +32,10 @@ StartMenu myStartMenu;
 EndGame myEndGame;
 
 void game_loop(int); // game animation loop
+int randNum(int);
 
 void init(void) {
+	srand(time(NULL));
 	myLight.translate(1.5, 1.5, 1.5);
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 
@@ -78,7 +81,9 @@ void reset(void) {
 	myPaddles[0].setDefaultPaddle(1);
 	myPaddles[1].setDefaultPaddle(2);
 	glFlush();
+	PlaySound(TEXT("Killers.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 	glutPostRedisplay();
+
 }
 
 void close(void) {
@@ -91,6 +96,10 @@ void turn_swap(void) {
 		turn = 1;
 	}
 }
+int randNum(int max){
+	int num = rand()%max + 1;
+	return num;
+}
 
 void game_over(void) {
 	printf("\n---Game Over---\n");
@@ -99,26 +108,28 @@ void game_over(void) {
 }
 
 void paddle_collision(void) {
-	std::vector<Point> bounds = myPaddles[turn - 1].getBounds();
-	if (bounds[0].z < 0) {
+	std::vector<Point> bounds = myPaddles[turn - 1].getBounds(); //Grabs the bounds of the current paddle
+	if (bounds[0].z < 0) { //If it is the paddle on the negative side
 		if (((myBall.zPosition - (myBall.scaledRadius * 1.25)) <= bounds[0].z)
 				&& (bounds[0].x >= myBall.xPosition)
 				&& (myBall.xPosition >= bounds[1].x)) {
 			pause = 1;
-			myBall.zSpeed = -myBall.zSpeed*1.05;
-			myBall.xSpeed = myBall.xSpeed*(2);
+			//Increase/decrease speed by a random number from -1% to 7%.
+			myBall.zSpeed = -myBall.zSpeed*(((GLfloat(randNum(8))/GLfloat(100))-.01) + 1);
+			//Increase rotation speed by a random number from 1-3.
+			myBall.xSpeed = myBall.xSpeed*(randNum(3));
 			turn_swap();
 		} else if (myBall.zPosition <= bounds[0].z) {
 			game_over();
 		}
 
-	} else if (bounds[0].z > 0) {
+	} else if (bounds[0].z > 0) { //If it is the paddle on the positive side
 		if (((myBall.zPosition + (myBall.scaledRadius * 1.25)) >= bounds[0].z)
 				&& (bounds[0].x >= myBall.xPosition)
 				&& (myBall.xPosition >= bounds[1].x)) {
 			pause = 1;
-			myBall.zSpeed = -myBall.zSpeed*1.05;
-			myBall.xSpeed = myBall.xSpeed*(2);
+			myBall.zSpeed = -myBall.zSpeed*(((GLfloat(randNum(8))/GLfloat(100))-.01) +1);
+			myBall.xSpeed = myBall.xSpeed*(randNum(3));
 			turn_swap();
 		} else if (myBall.zPosition >= bounds[0].z) {
 			game_over();
@@ -140,11 +151,9 @@ void display(void) {
 
 		myStartMenu.drawStartMenu();
 	} else if (gameState == 1) {
-		glEnable(GL_CULL_FACE);
 		glEnable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		myCamera.setProjectionMatrix(); //Sets 3D view
-		// Draw Table
 		glEnable(GL_TEXTURE_2D);
 		myTable.draw_table();
 		myBall.draw();
@@ -153,10 +162,10 @@ void display(void) {
 			myPaddles[i].draw();
 		}
 		glDisable(GL_TEXTURE_2D);
+
 	} else if (gameState == 2) {
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_DEPTH_TEST);
-		glDisable(GL_CULL_FACE);
 		//Display the menu.
 		glClear(GL_COLOR_BUFFER_BIT);
 		glLoadIdentity();
@@ -164,6 +173,7 @@ void display(void) {
 		gluOrtho2D(-winWidth / 2, winWidth / 2, -winHeight / 2, winHeight / 2);
 		//Display the end game state.
 		myEndGame.drawEndGame();
+		PlaySound(NULL,0,0);
 	}
 
 	glFlush();
@@ -195,18 +205,14 @@ void game_loop(int state) {
 	if (gameState == 1) {
 		if (pause == 1) {
 			myCamera.rotate(0.0, 1.0, 0.0, 5.0);
-			fflush(stdout);
 			if (turn == 1 && myCamera.eye.z <= -5) {
-				fflush(stdout);
 				pause = 0;
 			} else if (turn == 2 && myCamera.eye.z >= 5) {
-				fflush(stdout);
 				pause = 0;
 			}
 
 		}
 
-		//else{
 		//update ball position
 		myBall.translate(myBall.xSpeed, 0, myBall.zSpeed);
 
@@ -234,30 +240,29 @@ void keyDown(unsigned char key, int x, int y) {
 	maxleft = -0.6;
 
 	bool right = false,left = false;
+	//Checking table bounds for the paddle in play
 	if (turn == 2) {
 		mod = 1;
-		//printf("bounds = %f || %f \n", check[1].x + 0.1, maxright);
-		//fflush(stdout);
 		if((check[1].x) < maxright){
 			right = true;
 		}
-		if((check[0].x - 0.1) > maxleft){
+		if((check[0].x) > maxleft){
 			left = true;
 		}
 	} else if (turn == 1) {
 		mod = -1;
-		if((check[1].x + 0.1) < maxright){
+		if((check[1].x) < maxright){
 			left = true;
 		}
-		if((check[0].x - 0.1) > maxleft){
+		if((check[0].x) > maxleft){
 			right = true;
 		}
 	}
-	// Right
+	// Right if table bounds are met
 	if ((key == 'd') && right) {
 		myPaddles[turn - 1].translate(0.1 * mod, 0, 0);
 	}
-	// Left
+	// Left if table bounds are met
 	if ((key == 'a') && left) {
 		myPaddles[turn - 1].translate(-0.1 * mod, 0, 0);
 	}
@@ -270,8 +275,8 @@ int main(int argc, char** argv) {
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowPosition(100, 100);
 	glutInitWindowSize(winWidth, winHeight);
-	glutCreateWindow("CP411 First Person Pong");
-	glewInit(); // for using GSLS
+	glutCreateWindow("CP411 3D-Pong");
+	glewInit(); // for using GSLS later
 	init();
 
 	glCullFace(GL_BACK);

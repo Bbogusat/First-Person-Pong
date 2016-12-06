@@ -4,8 +4,6 @@
 
 extern Camera myCamera;
 extern Light myLight;
-extern bool isShading;
-extern bool isTexture;
 
 Paddle::Paddle(){
 	vertex[0][0] = -0.2;vertex[0][1] = -.1;vertex[0][2] = -.05;
@@ -156,17 +154,6 @@ void Paddle::draw_face(int i)
 			glTexCoord2d(0.0,1.0);
 			glVertex3fv(&vertex[face[i][3]][0]);
 		glEnd();
-
-	//} else {
-	/*
-		glBegin(GL_POLYGON);
-			glVertex3fv(&vertex[face[i][0]][0]);
-			glVertex3fv(&vertex[face[i][1]][0]);
-			glVertex3fv(&vertex[face[i][2]][0]);
-			glVertex3fv(&vertex[face[i][3]][0]);
-		glEnd();
-		*/
-	//}
 }
 
 void Paddle::draw()
@@ -177,18 +164,7 @@ void Paddle::draw()
 
     for (int i = 0; i < 6; i++) {
     	glBindTexture(GL_TEXTURE_2D, textureID);
-    	//if (!isBackface(i)) {
-    		//if (!isTexture) {
-				//if (isShading ) {
-					//GLfloat shade = getFaceShade(i);
-					//glColor3f(faceColor[i][0]*shade, faceColor[i][1]*shade, faceColor[i][2]*shade);
-				//} else {
-				//	glColor3f(faceColor[i][0], faceColor[i][1], faceColor[i][2]);
-				//}
-    		//}
-
     		draw_face(i);
-    	//}
     }
     glPopMatrix();
 }

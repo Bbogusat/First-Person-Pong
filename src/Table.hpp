@@ -2,7 +2,6 @@
  * Table.hpp
  *
  *  Created on: Nov 24, 2016
- *      Author: Eric
  */
 
 #ifndef TABLE_HPP_
@@ -12,10 +11,15 @@
 #include <stdio.h>
 #include <math.h>
 #include "Shape.hpp"
+#include "Leg.hpp"
 
 
 class Table: public Shape {
 	GLuint textureID[6];             // face textureID for surfaces
+	Leg* frontRightLeg;
+	Leg* backLeftLeg;
+	Leg* backRightLeg;
+	Leg* frontLeftLeg;
 
 public:
 	Table();

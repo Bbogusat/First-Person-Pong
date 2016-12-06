@@ -103,8 +103,8 @@ int RGBpixmap:: readBMPFile(string fname)
 	
 	nRows = numRows; // set class's data members
 	nCols = numCols;
-	cout << "numRows,numCols = " << numRows << "," << numCols << endl;
-	cout.flush();
+	//cout << "numRows,numCols = " << numRows << "," << numCols << endl;
+	//cout.flush();
 	pixel = new mRGB[nRows * nCols]; //space for array in memory
 	
 	if(!pixel) return 0; // out of memory!

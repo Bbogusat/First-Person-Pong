@@ -30,13 +30,6 @@ class Camera {
 	void setViewVolume(float viewAngle, float aspect, float Near, float Far);
 	void setAspect(float aspect);
 
-	/* another set of transforms*/
-//	void roll(float angle);
-//	void pitch(float angle);
-//	void yaw(float angle);
-//	void slide(double du, double dv, double dn);
-
-	/*  */
 	void setProjectionMatrix();
 
 };
